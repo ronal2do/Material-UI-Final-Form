@@ -7,7 +7,10 @@ import { InputLabel } from 'material-ui/Input';
 
 import { validate } from './helpers';
 
-const onSubmit = values => console.log('on submit', values);
+const onSubmit = (values, reset) => {
+  console.log('on submit', values);
+  console.log('reset after submit', reset)
+}
 
 const handleSubmit = values => console.log('on handleSubmit', values);
 
@@ -50,13 +53,13 @@ const MyForm = () => (
   <Form
     onSubmit={onSubmit}
     validate={validate}
-    render={({ handleSubmit, submitting, pristine, invalid, reset }) => (
+    render={({ handleSubmit, onBlur, submitting, pristine, invalid, reset }) => (
       <form onSubmit={handleSubmit}>
 
-        {FIELDS.map(({ name, placeholder, type}) =>
+        {FIELDS.map(({ name, placeholder, type, fullWidth}) =>
           <Field key={name} name={name}>
 
-            {({ input, meta, submitting, fullWidth }) => 
+            {({ input, meta, submitting, onBlur }) => 
               type === 'select' ? (
                 <FormControl 
                   style={{ 
@@ -64,7 +67,7 @@ const MyForm = () => (
                     marginTop: 16, 
                     marginBottom: 8 
                   }}
-                  fullWidth
+                  fullWidth={!!fullWidth}
                 >
                   <InputLabel 
                     error={meta.touched && meta.error && true} 
@@ -76,7 +79,6 @@ const MyForm = () => (
                     error={meta.touched && meta.error && true}
                     input={<Input name="age" id={`form-${type}-${name}`} />}
                     {...input}
-                    
                   >
                     <MenuItem value="">
                       <em>None</em>
@@ -91,14 +93,14 @@ const MyForm = () => (
                 <TextField
                   error={meta.touched && meta.error && true}
                   id={`form-${type}-${name}`}
-                  fullWidth
+                  fullWidth={!!fullWidth}
                   label={placeholder}
-                  {...input}
                   type={type}
                   placeholder={placeholder}
                   margin="normal"
                   helperText={meta.touched && meta.error && meta.error}
-                  onBlur={() => console.log('blur')}
+                  // onBlur={() => console.log('blur')}
+                  {...input}
                 />
               )}
 
